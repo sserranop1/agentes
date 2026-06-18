@@ -9,12 +9,14 @@ public class Agent {
     private String instructions;
     private Map<String, Tool> tools;
     private List<String> memory;
+    private OpenAIService aiService;
 
     public Agent(String name, String instructions) {
         this.name = name;
         this.instructions = instructions;
         this.tools = new HashMap<>();
         this.memory = new ArrayList<>();
+        this.aiService = new OpenAIService();
     }
 
     public void addTool(Tool tool) {
@@ -59,7 +61,9 @@ public class Agent {
         String selectedTool = decideTool(userInput);
 
         if (selectedTool == null) {
-            String response = "No necesito herramientas. Respondo directamente: " + userInput;
+            String prompt = buildPrompt(userInput);
+            String response = aiService.ask(prompt);
+
             remember("Agente: " + response);
             return response;
         }
@@ -79,6 +83,22 @@ public class Agent {
         remember("Agente: " + response);
 
         return response;
+    }
+
+    private String buildPrompt(String userInput) {
+        return "Eres un agente de IA programado en Java.\n"
+                + "Tu nombre es: " + name + ".\n"
+                + "Tus instrucciones son: " + instructions + "\n\n"
+                + "Debes responder en español, de forma clara y didáctica.\n"
+                + "Si el usuario pregunta algo técnico, explica paso a paso.\n"
+                + "No inventes información si no la sabes.\n\n"
+                + "Memoria de la conversación:\n"
+                + showMemory()
+                + "\n\n"
+                + "Pregunta actual del usuario:\n"
+                + userInput
+                + "\n\n"
+                + "Respuesta:";
     }
 
     public String showMemory() {

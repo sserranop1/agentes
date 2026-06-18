@@ -21,6 +21,7 @@ public class Main {
         System.out.println("- busca memoria");
         System.out.println("- recuerda que mi nombre es Santiago");
         System.out.println("- muestra memoria");
+        System.out.println("- explícame qué es un agente");
         System.out.println("- salir");
         System.out.println();
 
